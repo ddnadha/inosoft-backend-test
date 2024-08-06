@@ -14,10 +14,6 @@ class Vehicle extends Model
     protected $collection = 'vehicles';
 
     protected $fillable = [
-        'manufactured_at', 'color', 'price', 'type', 'detailedInfo'
-    ];
-
-    protected $casts = [
-        'detailedInfo' => 'array',
+        'manufactured_at', 'color', 'price', 'type', 'detailedInfo', 'stock'
     ];
 }

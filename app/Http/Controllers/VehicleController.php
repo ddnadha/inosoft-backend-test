@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use MongoDB\Client;
 
 class VehicleController extends Controller
 {
@@ -23,8 +24,13 @@ class VehicleController extends Controller
             'detailedInfo' => 'required|array',
         ]);
 
-        $vehicle = Vehicle::create($validated);
-        return response()->json($vehicle, 201);
+        // $vehicle = Vehicle::create($validated);
+        $client = new Client(env("MONGODB_URI"));
+        $vehicle = $client->inorctest->vehicles->insertOne($validated);
+        $insertedId = $vehicle->getInsertedId();
+        $insertedDocument = $client->inorctest->vehicles->findOne(['_id' => $insertedId]);
+
+        return response()->json($insertedDocument, 201);
     }
 
     public function show($id)
