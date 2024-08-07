@@ -18,7 +18,7 @@ class TransactController extends Controller
         $this->transactService = $transactService;
     }
 
-    public function get(): JsonResponse
+    public function index(): JsonResponse
     {
         try {
             $result = [
