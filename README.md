@@ -72,8 +72,8 @@ for this section, bearer token are required for each request to placed in the he
 **1. GET - /api/transaction**
 get all transaction that stored in database
 
-**1. POST - /api/transaction**
-create new transaction, body with certain value are required, exmaple:
+**2. POST - /api/transaction**
+create new transaction, body with certain value are required, example:
 
 ```
     {
