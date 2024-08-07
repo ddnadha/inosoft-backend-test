@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TransactController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +21,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::resource('vehicle', VehicleController::class);
+Route::middleware('auth.api')->group(function () {
+    Route::resource('vehicle', VehicleController::class);
+    Route::resource('transaction', TransactController::class)->only(['index', 'store']);
+});
+
+Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+Route::post('register', [AuthController::class, 'register'])->name('auth.register');

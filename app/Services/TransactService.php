@@ -21,22 +21,22 @@ class TransactService
         $this->transactionRepository = $transactionRepository;
     }
 
-    public function checkout(Request $request): Transact
+    public function checkout(array $data): Transact
     {
-        $validator = Validator::make($request->toArray(), [
+        $validator = Validator::make($data, [
             'price' => ['required', 'numeric'],
             'name' => ['required', 'string'],
             'items' => ['required', 'array'],
             'items.*.id' => ['required', 'string'],
-            'items.*.vehicle' => ['required', 'string', Rule::in(Vehicle::class)],
+            'items.*.price' => ['required', 'numeric'],
             'items.*.qty' => ['required', 'int'],
         ]);
 
         if ($validator->fails()) {
-            throw new InvalidArgumentException($validator->errors()->first());
+            throw new InvalidArgumentException($validator->errors()->first(), 400);
         }
 
-        return $this->transactionRepository->storeData($request);
+        return $this->transactionRepository->storeData($data);
     }
 
     public function report(): array

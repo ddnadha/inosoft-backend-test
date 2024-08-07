@@ -20,16 +20,23 @@ class VehicleTest extends TestCase
      */
     public function test_vehicle_store()
     {
+        $requestJWT = $this->postJson('api/login', [
+            'email' => 'didanadha99@gmail.com',
+            'password' => '12345678'
+        ]);
+        $token = $requestJWT->decodeResponseJson()['token'];
+
         $vehicleData = [
             "manufactured_at" => $this->faker()->year(),
             "color" => $this->faker()->colorName(),
             "price" => $this->faker()->numberBetween(50, 900) * 100000,
+            "stock" => $this->faker()->numberBetween(10, 250),
             "type" => $this->faker()->randomElement(['motorcycle', 'car'])
         ];
         $vehicleData['detailedInfo'] = $this->getDetailedInfo($vehicleData['type']);
 
-        $response = $this->postJson('/api/vehicle', $vehicleData);
-
+        $response = $this->withHeader('Authorization', "Bearer $token")
+            ->postJson('/api/vehicle', $vehicleData);
         $response->assertStatus(201)
             ->assertJsonStructure([
                 'manufactured_at',

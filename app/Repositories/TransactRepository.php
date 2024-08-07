@@ -17,9 +17,9 @@ class TransactRepository
         $this->vehicle = $vehicle;
     }
 
-    public function storeData($data): Transact
+    public function storeData(array $data): Transact
     {
-        foreach ($data->items as $item) {
+        foreach ($data['items'] as $item) {
             $this->vehicle
                 ->where('_id', $item['id'])
                 ->decrement('stock', $item['qty']);

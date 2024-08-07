@@ -17,7 +17,8 @@ class VehicleFactory extends Factory
             "manufactured_at" => $this->faker->year(),
             "color" => $this->faker->colorName(),
             "price" => $this->faker->numberBetween(50, 900) * 100000,
-            "type" => $this->faker->randomElement(['motorcycle', 'car'])
+            "type" => $this->faker->randomElement(['motorcycle', 'car']),
+            "stock" => $this->faker->numberBetween(10, 250),
         ];
         $vehicleData['detailedInfo'] = (object) $this->getDetailedInfo($vehicleData['type']);
         return $vehicleData;
