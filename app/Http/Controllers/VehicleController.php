@@ -3,56 +3,95 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Services\VehicleService;
+use Exception;
 use Illuminate\Http\Request;
 
 class VehicleController extends Controller
 {
+    protected VehicleService $vehicleService;
+    public function __construct(VehicleService $vehicleService)
+    {
+        $this->vehicleService = $vehicleService;
+    }
+
     public function index()
     {
-        $vehicle = Vehicle::all();
-        return response()->json($vehicle);
+        try {
+            $result = [
+                'status' => 200,
+                'data' => $this->vehicleService->index(),
+            ];
+        } catch (Exception $e) {
+            $result = [
+                'status' => $e->getCode() == 0 ? 500 : $e->getCode(),
+                'error' => $e->getMessage(),
+            ];
+        }
+        return response()->json($result, $result['status']);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'manufactured_at' => 'required|integer',
-            'color' => 'required|string',
-            'price' => 'required|numeric',
-            'type' => 'required|in:motorcycle,car',
-            'detailedInfo' => 'required|array',
-        ]);
-
-        $vehicle = Vehicle::create($validated);
-        return response()->json($vehicle, 201);
+        try {
+            $result = [
+                'status' => 201,
+                'data' => $this->vehicleService->store($request->all()),
+            ];
+        } catch (Exception $e) {
+            $result = [
+                'status' => $e->getCode() == 0 ? 500 : $e->getCode(),
+                'error' => $e->getMessage(),
+            ];
+        }
+        return response()->json($result, $result['status']);
     }
 
     public function show($id)
     {
-        $vehicle = Vehicle::findOrFail($id);
-        return response()->json($vehicle);
+        try {
+            $result = [
+                'status' => 200,
+                'data' => $this->vehicleService->show($id),
+            ];
+        } catch (Exception $e) {
+            $result = [
+                'status' => $e->getCode() == 0 ? 500 : $e->getCode(),
+                'error' => $e->getMessage(),
+            ];
+        }
+        return response()->json($result, $result['status']);
     }
 
     public function update(Request $request, $id)
     {
-        $vehicle = Vehicle::findOrFail($id);
-
-        $validated = $request->validate([
-            'manufactured_at' => 'integer',
-            'color' => 'string',
-            'price' => 'numeric',
-            'type' => 'in:Motor,Mobil',
-            'detailedInfo' => 'array',
-        ]);
-
-        $vehicle->update($validated);
-        return response()->json($vehicle);
+        try {
+            $result = [
+                'status' => 200,
+                'data' => $this->vehicleService->update($id, $request->all()),
+            ];
+        } catch (Exception $e) {
+            $result = [
+                'status' => $e->getCode() == 0 ? 500 : $e->getCode(),
+                'error' => $e->getMessage(),
+            ];
+        }
+        return response()->json($result, $result['status']);
     }
 
     public function destroy($id)
     {
-        $vehicle = Vehicle::findOrFail($id);
-        $vehicle->delete();
-        return response()->json(null, 204);
+        try {
+            $result = [
+                'status' => 200,
+                'data' => $this->vehicleService->delete($id),
+            ];
+        } catch (Exception $e) {
+            $result = [
+                'status' => $e->getCode() == 0 ? 500 : $e->getCode(),
+                'error' => $e->getMessage(),
+            ];
+        }
+        return response()->json($result, $result['status']);
     }
 }

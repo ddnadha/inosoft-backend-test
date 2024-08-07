@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware('auth.api')->group(function () {
-    Route::resource('vehicle', VehicleController::class);
-    Route::resource('transaction', TransactController::class)->only(['index', 'store']);
+    Route::apiResource('vehicle', VehicleController::class)->only(['index', 'store']);
+    Route::apiResource('transaction', TransactController::class)->only(['index', 'store']);
 });
 
 Route::post('login', [AuthController::class, 'login'])->name('auth.login');

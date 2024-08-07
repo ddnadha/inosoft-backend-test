@@ -6,6 +6,7 @@ use App\Traits\RefreshDatabaseTransactionLess;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 
 class VehicleTest extends TestCase
 {
@@ -13,11 +14,20 @@ class VehicleTest extends TestCase
         RefreshDatabaseTransactionless::refreshTestDatabase insteadof RefreshDatabase;
     }
 
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
+    public function test_vehicle_get_all()
+    {
+        $requestJWT = $this->postJson('api/login', [
+            'email' => 'didanadha99@gmail.com',
+            'password' => '12345678'
+        ]);
+        $token = $requestJWT->decodeResponseJson()['token'];
+        $response = $this->withHeader('Authorization', "Bearer $token")
+            ->getJson('/api/vehicle');
+
+        $response->assertStatus(200);
+    }
+
+
     public function test_vehicle_store()
     {
         $requestJWT = $this->postJson('api/login', [
@@ -39,13 +49,14 @@ class VehicleTest extends TestCase
             ->postJson('/api/vehicle', $vehicleData);
         $response->assertStatus(201)
             ->assertJsonStructure([
-                'manufactured_at',
-                'color',
-                'price',
-                'type',
-                'detailedInfo',
+                'data' => [
+                    'manufactured_at',
+                    'color',
+                    'price',
+                    'type',
+                    'detailedInfo',
+                ]
             ]);
-
         $this->assertDatabaseHas('vehicles', [
             'manufactured_at' => $vehicleData['manufactured_at'],
             'color' => $vehicleData['color'],

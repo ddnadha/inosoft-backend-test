@@ -22,12 +22,12 @@ class AuthRepository
         return $this->user->create($data);
     }
 
-    public function findByEmail($email): User|null
+    public function findByEmail($email): ?User
     {
         return $this->user->where('email', $email)->first();
     }
 
-    public function authenticate(array $data)
+    public function authenticate(array $data): mixed
     {
         if (!$token = auth()->guard('api')->attempt($data)) {
             throw new InvalidArgumentException(__('auth.password'), 401);
